@@ -1,14 +1,12 @@
-# Careers Backend
+# Consumer Backend
 
-REST API to show the list of jobs with JWT authentication.
+REST API to support InterviewIN
 
 ## Features
 
 - [x] JWT Authentication and Authorization
 - [x] Bcrypt password hashing
 - [x] Cookies
-- [x] Filter jobs by location/description/type
-- [x] Pagination
 
 ## Setup
 
