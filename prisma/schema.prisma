@@ -7,9 +7,31 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum InterviewStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+enum Role {
+  ADMIN
+  COMPANY
+  CANDIDATE
+}
+
 model User {
   id        Int     @id @default(autoincrement())
   username  String  @unique
   password  String
-  role      String  @default("user")
+  role      Role    @default(CANDIDATE)
+  interviews Interview[]
+}
+
+model Interview {
+  id        Int     @id @default(autoincrement())
+  title     String
+  chat      String[]
+  status    InterviewStatus @default(PENDING)
+  user      User    @relation(fields: [userId], references: [id])
+  userId    Int
 }
