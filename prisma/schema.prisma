@@ -20,18 +20,21 @@ enum Role {
 }
 
 model User {
-  id        Int     @id @default(autoincrement())
-  username  String  @unique
-  password  String
-  role      Role    @default(CANDIDATE)
-  interviews Interview[]
+  id                  Int         @id @default(autoincrement())
+  username            String      @unique
+  password            String
+  role                Role        @default(CANDIDATE)
+  candidateInterviews Interview[] @relation("fk_candidate")
+  CompanyInterviews   Interview[] @relation("fk_company")
 }
 
 model Interview {
-  id        Int     @id @default(autoincrement())
-  title     String
-  chat      String[]
-  status    InterviewStatus @default(PENDING)
-  user      User    @relation(fields: [userId], references: [id])
-  userId    Int
+  id          Int             @id @default(autoincrement())
+  title       String
+  chat        String[]
+  status      InterviewStatus @default(PENDING)
+  candidate   User            @relation("fk_candidate", fields: [candidateId], references: [id])
+  candidateId Int
+  company     User            @relation("fk_company", fields: [companyId], references: [id])
+  companyId   Int
 }
