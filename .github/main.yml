@@ -1,0 +1,37 @@
+name: Deploy to GAE
+
+on:
+  push:
+    branches: [main]
+  # pull_request:
+  #   branches: [main]
+
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploying to Google Cloud
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Cloud SDK
+        uses: "google-github-actions/auth@v1"
+        with:
+          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Set Up App
+        run: |
+          echo '${{ secrets.ENV }}' > .env
+
+      - name: Deploy to App Engine
+        id: deploy
+        uses: google-github-actions/deploy-appengine@v1
+        with:
+          deliverables: app.yaml
+          project_id: ${{ interviewin }}
+
+      - name: Test
+        run: curl "${{ steps.deploy.outputs.url }}"

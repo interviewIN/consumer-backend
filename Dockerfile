@@ -1,6 +1,7 @@
-FROM node
+FROM node:latest
 
 COPY . .
+COPY ./.env ./.env
 
 RUN npm install
 
