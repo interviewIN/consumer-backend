@@ -25,7 +25,16 @@ model User {
   password            String
   role                Role        @default(CANDIDATE)
   candidateInterviews Interview[] @relation("fk_candidate")
-  CompanyInterviews   Interview[] @relation("fk_company")
+  Jobs                Job[]       @relation("fk_company")
+}
+
+model Job {
+  id          Int         @id @default(autoincrement())
+  title       String
+  description String
+  company     User        @relation("fk_company", fields: [companyId], references: [id])
+  companyId   Int
+  Interview   Interview[]
 }
 
 model Interview {
@@ -33,8 +42,10 @@ model Interview {
   title       String
   chat        String[]
   status      InterviewStatus @default(PENDING)
+  updatedAt   DateTime        @updatedAt
+  consumedAt  DateTime?
   candidate   User            @relation("fk_candidate", fields: [candidateId], references: [id])
   candidateId Int
-  company     User            @relation("fk_company", fields: [companyId], references: [id])
-  companyId   Int
+  job         Job             @relation(fields: [jobId], references: [id])
+  jobId       Int
 }
