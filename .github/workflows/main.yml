@@ -31,7 +31,7 @@ jobs:
         uses: google-github-actions/deploy-appengine@v1
         with:
           deliverables: app.yaml
-          project_id: ${{ interviewin }}
+          project_id: interviewin
 
       - name: Test
         run: curl "${{ steps.deploy.outputs.url }}"
