@@ -1,4 +1,4 @@
-runtime: nodejs
+runtime: nodejs18
 instance_class: B1
 service: default
 
