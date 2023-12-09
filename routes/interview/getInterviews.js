@@ -1,6 +1,6 @@
 module.exports = async (fastify, opts) => {
     fastify.get(
-        "/interview",
+        "/",
         {
             onRequest: [fastify.authenticate],
         },
