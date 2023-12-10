@@ -17,7 +17,7 @@ module.exports = async (fastify, opts) => {
       data: {
         username,
         password: hashedPassword,
-        role: role || "user",
+        role: role,
       },
     });
     return { user };
