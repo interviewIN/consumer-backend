@@ -5,40 +5,40 @@ module.exports = async (fastify, opts) => {
 			onRequest: [fastify.authenticate],
 		},
 		async (request, reply) => {
-			const jobs = await fastify.prisma.jobs.findMany({
-				OR: [
-					{
-						companyId: request.user.id,
-					},
-					{
-						candidateId: request.user.id,
-					},
-				],
-			});
+			if (request.user.role === "CANDIDATE") {
+				const jobs = await fastify.prisma.job.findMany();
 
-			const user = await fastify.prisma.user.findUnique({
-				where: {
-					id: request.user.id,
-				},
-			});
-
-			if (user.role === "candidate") {
-				interviews.forEach(async (job) => {
-					job.applied = false;
-					const interview = await fastify.prisma.interview.findUnique({
-						where: {
-							jobId: job.id,
-							candidateId: request.user.id,
+				const interviews = await fastify.prisma.interview.findMany({
+					where: {
+						candidate: {
+							id: request.user.id,
 						},
+					},
+				});
+
+				jobs.forEach(async (job) => {
+					job.applied = false;
+
+					const interview = interviews.find((interview) => {
+						return interview.jobId === job.id;
 					});
 
 					if (interview) {
 						job.applied = true;
 					}
 				});
-			}
 
-			return { interviews };
+				return { jobs };
+			} else {
+				const jobs = await fastify.prisma.job.findMany({
+					where: {
+						company: {
+							id: request.user.id,
+						},
+					},
+				});
+				return { jobs };
+			}
 		}
 	);
 };

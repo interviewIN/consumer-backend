@@ -16,7 +16,7 @@ module.exports = async (fastify, opts) => {
     if (!valid) {
       reply.code(400).send({ message: "Invalid password" });
     }
-    const token = fastify.jwt.sign({ id: user.id });
+    const token = fastify.jwt.sign({ id: user.id, role: user.role });
     reply
       .setCookie("token", token, {
         path: "/",

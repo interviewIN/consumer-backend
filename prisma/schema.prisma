@@ -8,6 +8,8 @@ datasource db {
 }
 
 enum InterviewStatus {
+  WAITING
+  IN_PROGRESS
   PENDING
   ACCEPTED
   REJECTED
@@ -34,18 +36,21 @@ model Job {
   description String
   company     User        @relation("fk_company", fields: [companyId], references: [id])
   companyId   Int
-  Interviews   Interview[]
+  Interviews  Interview[]
+
+  @@index([companyId], name: "company_index")
 }
 
 model Interview {
   id          Int             @id @default(autoincrement())
-  title       String
   chat        String[]
-  status      InterviewStatus @default(PENDING)
+  status      InterviewStatus @default(WAITING)
   updatedAt   DateTime        @updatedAt
-  consumedAt  DateTime?
   candidate   User            @relation("fk_candidate", fields: [candidateId], references: [id])
   candidateId Int
   job         Job             @relation(fields: [jobId], references: [id])
   jobId       Int
+
+  @@unique([candidateId, jobId])
+  @@index([jobId], name: "job_index")
 }
