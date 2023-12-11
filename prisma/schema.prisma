@@ -34,7 +34,7 @@ model Job {
   description String
   company     User        @relation("fk_company", fields: [companyId], references: [id])
   companyId   Int
-  Interview   Interview[]
+  Interviews   Interview[]
 }
 
 model Interview {
