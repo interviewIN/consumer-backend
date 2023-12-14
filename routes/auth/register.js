@@ -3,7 +3,7 @@ const authSchema = require("../../schemas/authSchema");
 
 module.exports = async (fastify, opts) => {
   fastify.post("/register", authSchema, async (request, reply) => {
-    const { username, password, role } = request.body;
+    const { username, email, password, role } = request.body;
     const uname = await fastify.prisma.user.findUnique({
       where: {
         username,
