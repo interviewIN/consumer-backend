@@ -12,14 +12,26 @@ module.exports = async (fastify, opts) => {
     if (uname) {
       reply.code(400).send({ message: "Username already exists" });
     }
+
+    const isEmailUsed = await fastify.prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+    if (isEmailUsed) {
+      reply.code(400).send({ message: "Email already used" });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await fastify.prisma.user.create({
       data: {
         username,
+        email,
         password: hashedPassword,
         role: role,
       },
     });
+    fastify.sendEmail("ahardiswastia@gmail.com", "hai");
     return { user };
   });
 };
