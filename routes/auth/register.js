@@ -31,7 +31,6 @@ module.exports = async (fastify, opts) => {
         role: role,
       },
     });
-    fastify.sendEmail("ahardiswastia@gmail.com", "hai");
     return { user };
   });
 };
