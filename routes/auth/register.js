@@ -1,8 +1,8 @@
 const bcrypt = require("bcryptjs");
-const authSchema = require("../../schemas/authSchema");
+const registerSchema = require("../../schemas/registerSchema");
 
 module.exports = async (fastify, opts) => {
-  fastify.post("/register", authSchema, async (request, reply) => {
+  fastify.post("/register", registerSchema, async (request, reply) => {
     const { username, email, password, role } = request.body;
     const uname = await fastify.prisma.user.findUnique({
       where: {
