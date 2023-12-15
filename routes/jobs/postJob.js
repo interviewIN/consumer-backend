@@ -8,6 +8,7 @@ module.exports = async (fastify, opts) => {
 			
             if(request.user.role !== "COMPANY"){
                 reply.code(403).send({ message: "Forbidden" });
+                return;
             }
 
             const { title, description } = request.body;

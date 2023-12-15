@@ -8,6 +8,7 @@ module.exports = async (fastify, opts) => {
 
             if(request.user.role === "CANDIDATE"){
                 reply.code(403).send({ message: "Only companies can access this route" });
+                return;
             }
 
             const interviews = await fastify.prisma.interview.findMany({

@@ -8,6 +8,7 @@ module.exports = async (fastify, opts) => {
 
             if(request.user.role !== "CANDIDATE"){
                 reply.code(403).send({ message: "Forbidden" });
+				return;
             }
 
 			const { jobId } = request.body;
@@ -20,6 +21,7 @@ module.exports = async (fastify, opts) => {
 
 			if (!job) {
 				reply.code(404).send({ message: "Job not found" });
+				return;
 			}
 
 			const interview = await fastify.prisma.interview.findUnique({
@@ -33,6 +35,7 @@ module.exports = async (fastify, opts) => {
 
 			if (interview) {
 				reply.code(400).send({ message: "Already applied" });
+				return;
 			} else {
 				const interview = await fastify.prisma.interview.create({
 					data: {

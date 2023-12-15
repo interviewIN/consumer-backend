@@ -12,6 +12,7 @@ module.exports = async (fastify, opts) => {
             });
             if (!interview) {
                 reply.code(404).send({ message: "Interview not found" });
+                return;
             }
 
 

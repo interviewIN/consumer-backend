@@ -12,11 +12,13 @@ module.exports = async (fastify, opts) => {
 		});
 		if (!user) {
 			reply.code(400).send({ message: "Username does not exist" });
+			return;
 		}
 
 		const valid = await bcrypt.compare(password, user.password);
 		if (!valid) {
 			reply.code(400).send({ message: "Invalid password" });
+			return;
 		}
 		const token = fastify.jwt.sign({ id: user.id, role: user.role });
 		reply

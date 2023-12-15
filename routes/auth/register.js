@@ -11,6 +11,7 @@ module.exports = async (fastify, opts) => {
     });
     if (uname) {
       reply.code(400).send({ message: "Username already exists" });
+      return;
     }
 
     const isEmailUsed = await fastify.prisma.user.findUnique({
@@ -20,6 +21,7 @@ module.exports = async (fastify, opts) => {
     });
     if (isEmailUsed) {
       reply.code(400).send({ message: "Email already used" });
+      return;
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
