@@ -32,12 +32,13 @@ model User {
 }
 
 model Job {
-  id          Int         @id @default(autoincrement())
-  title       String
-  description String
-  company     User        @relation("fk_company", fields: [companyId], references: [id])
-  companyId   Int
-  Interviews  Interview[]
+  id                 Int         @id @default(autoincrement())
+  title              String
+  description        String
+  interviewQuestions String[]
+  company            User        @relation("fk_company", fields: [companyId], references: [id])
+  companyId          Int
+  Interviews         Interview[]
 
   @@index([companyId], name: "company_index")
 }

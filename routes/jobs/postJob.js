@@ -11,12 +11,13 @@ module.exports = async (fastify, opts) => {
                 return;
             }
 
-            const { title, description } = request.body;
+            const { title, description, interviewQuestions } = request.body;
 
             const job = await fastify.prisma.job.create({
                 data: {
                     title: title,
                     description: description,
+                    interviewQuestions: interviewQuestions,
                     company: {
                         connect: {
                             id: request.user.id,
