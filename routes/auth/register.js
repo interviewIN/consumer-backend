@@ -3,7 +3,7 @@ const registerSchema = require("../../schemas/registerSchema");
 
 module.exports = async (fastify, opts) => {
   fastify.post("/register", registerSchema, async (request, reply) => {
-    const { username, email, password, role } = request.body;
+    const { username, email, name, password, role } = request.body;
     const uname = await fastify.prisma.user.findUnique({
       where: {
         username,
@@ -29,6 +29,7 @@ module.exports = async (fastify, opts) => {
       data: {
         username,
         email,
+        name,
         password: hashedPassword,
         role: role,
       },
