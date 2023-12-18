@@ -41,7 +41,14 @@ module.exports = async (fastify, opts) => {
 					lastChat.question
 				);
 
-				interview.answers.push(lastChat.answer);
+				if (interview.answers.length > lastQuestionIndex) {
+					interview.answers[lastQuestionIndex] = lastChat.answer;
+				} else {
+					while (interview.answers.length < lastQuestionIndex) {
+						interview.answers.push(chat[interview.answers.length].answer);
+					}
+					interview.answers.push(lastChat.answer);
+				}
 
 				if (lastQuestionIndex === -1) {
 					reply.code(400).send({ message: "Invalid question" });
