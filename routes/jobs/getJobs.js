@@ -6,7 +6,19 @@ module.exports = async (fastify, opts) => {
 		},
 		async (request, reply) => {
 			if (request.user.role === "CANDIDATE") {
-				const jobs = await fastify.prisma.job.findMany();
+				const jobs = await fastify.prisma.job.findMany({
+					select: {
+						id: true,
+						title: true,
+						description: true,
+						company: {
+							select: {
+								id: true,
+								name: true,
+							},
+						},
+					},
+				});
 
 				const interviews = await fastify.prisma.interview.findMany({
 					where: {
