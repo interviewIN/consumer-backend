@@ -13,7 +13,7 @@ module.exports = fp(async function (fastify, opts) {
       });
 
       let details = {
-        from: "tesEventee@gmail.com",
+        from: process.env.EMAIL,
         to: email,
         subject: subject,
         html: text,
