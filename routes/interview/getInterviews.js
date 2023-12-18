@@ -9,8 +9,22 @@ module.exports = async (fastify, opts) => {
 				where: {
 					candidateId: request.user.id,
 				},
+				include: {
+					job: true,
+				},
 			});
-			return { interviews };
+			return { 
+				interviews: interviews.map((interview) => {
+					return {
+						id: interview.id,
+						status: interview.status,
+						jobId: interview.jobId,
+						jobTitle: interview.job.title,
+						jobCompany: interview.job.company,
+						jobLocation: interview.job.location,
+					}
+				})
+			 };
 		}
 	);
 };

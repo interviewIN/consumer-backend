@@ -40,8 +40,9 @@ module.exports = async (fastify, opts) => {
 				const interview = await fastify.prisma.interview.create({
 					data: {
                         status: "WAITING",
-						chat: [],
-                        updatedAt: new Date(),
+						questions: job.interviewQuestions,
+						answers: [],
+						summary: "",
 						job: {
 							connect: {
 								id: jobId,
@@ -54,7 +55,7 @@ module.exports = async (fastify, opts) => {
 						},
 					},
 				});
-				return { interview };
+				return { message: "Applied successfully" };
 			}
 		}
 	);

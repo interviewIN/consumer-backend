@@ -45,7 +45,9 @@ model Job {
 
 model Interview {
   id          Int             @id @default(autoincrement())
-  chat        String[]
+  questions   String[]
+  answers     String[]
+  summary     String
   status      InterviewStatus @default(WAITING)
   updatedAt   DateTime        @updatedAt
   candidate   User            @relation("fk_candidate", fields: [candidateId], references: [id])
