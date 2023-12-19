@@ -40,6 +40,7 @@ model Job {
   company            User        @relation("fk_company", fields: [companyId], references: [id])
   companyId          Int
   Interviews         Interview[]
+  createdAt          DateTime    @default(now())
 
   @@index([companyId], name: "company_index")
 }
