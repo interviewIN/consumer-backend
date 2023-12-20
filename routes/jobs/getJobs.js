@@ -11,6 +11,7 @@ module.exports = async (fastify, opts) => {
 						id: true,
 						title: true,
 						description: true,
+						createdAt: true,
 						company: {
 							select: {
 								id: true,
