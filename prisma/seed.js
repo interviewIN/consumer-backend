@@ -57,6 +57,7 @@ async function main() {
         create: {
             title: "Software Engineer",
             description: "Software Engineer",
+            interviewQuestions: ["What is your name?", "What is your hobby?"],
             company: {
                 connect: {
                     id: company.id,
@@ -65,7 +66,7 @@ async function main() {
         },
     });
 
-	console.log({ syawal, Aldwin, Vionie, company });
+	console.log({ syawal, Aldwin, Vionie, company, job });
 }
 main()
 	.then(async () => {

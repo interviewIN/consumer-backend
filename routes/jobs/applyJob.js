@@ -64,7 +64,6 @@ module.exports = async (fastify, opts) => {
             status: "WAITING",
             questions: job.interviewQuestions,
             answers: [],
-            summary: "",
             job: {
               connect: {
                 id: jobId,

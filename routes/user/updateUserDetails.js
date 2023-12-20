@@ -1,5 +1,5 @@
 module.exports = async (fastify, opts) => {
-	fastify.put(
+	fastify.patch(
 		"/",
 		{
 			onRequest: [fastify.authenticate],

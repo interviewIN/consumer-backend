@@ -1,3 +1,5 @@
+const axios = require("axios");
+
 module.exports = async (fastify, opts) => {
 	fastify.post(
 		"/generateQuestion",
@@ -13,6 +15,29 @@ module.exports = async (fastify, opts) => {
 				where: {
 					id: interviewId,
 				},
+				select: {
+					id: true,
+					status: true,
+					questions: true,
+					answers: true,
+					summary: true,
+					candidateId: true,
+					candidate: {
+						select: {
+							name: true,
+						},
+					},
+					job: {
+						select: {
+							title: true,
+							company: {
+								select: {
+									name: true,
+								},
+							},
+						},
+					},
+				},
 			});
 
 			if (!interview) {
@@ -24,6 +49,9 @@ module.exports = async (fastify, opts) => {
 				reply
 					.code(403)
 					.send({ message: "You are not allowed to access this interview" });
+				return;
+			} else if(["PENDING", "ACCEPTED", "REJECTED"].includes(interview.status)){
+				reply.code(403).send({ message: "Interview is already completed" });
 				return;
 			}
 
@@ -60,6 +88,34 @@ module.exports = async (fastify, opts) => {
 					interviewQuestion.question = "Thank you for your time!";
 
 					// TODO: Req summary from summary service
+
+					const requestBody = {
+						candidate_name: interview.candidate.name,
+						job_title: interview.job.title,
+						company_name: interview.job.company.name,
+						interview_qna: interview.questions.map((question, index) => {
+							return {
+								question: question,
+								answer: interview.answers[index],
+							};
+						}),
+					}
+
+					const response = await axios.post(
+						process.env.SUMMARY_URL,
+						requestBody
+					).then((res) => res.data).catch((err) => console.log(err));
+
+					interview.summary = {
+						overallImpression: response.overall_impression,
+						chanceOfGettingTheJob: response.chance_of_getting_the_job,
+						mostRelevantPosition: response.most_relevant_position,
+						personalCapability: response.personal_capability,
+						psychologicalCapability: response.psychological_capability,
+						technicalCapability: response.technical_capability,
+						finalThoughts: response.final_thoughts,
+					};
+
 				} else {
 					interviewQuestion.question =
 						interview.questions[lastQuestionIndex + 1];
@@ -74,7 +130,12 @@ module.exports = async (fastify, opts) => {
 					data: {
 						status: interview.status,
 						answers: interview.answers,
-						summary: interview.summary,
+						summary: {
+							upsert: {
+								update: interview.summary,
+								create: interview.summary,
+							}
+						},
 					},
 				});
 

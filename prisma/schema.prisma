@@ -49,7 +49,7 @@ model Interview {
   id          Int             @id @default(autoincrement())
   questions   String[]
   answers     String[]
-  summary     String
+  summary     Summary?
   status      InterviewStatus @default(WAITING)
   updatedAt   DateTime        @updatedAt
   candidate   User            @relation("fk_candidate", fields: [candidateId], references: [id])
@@ -59,4 +59,17 @@ model Interview {
 
   @@unique([candidateId, jobId])
   @@index([jobId], name: "job_index")
+}
+
+model Summary {
+  id                      Int       @id @default(autoincrement())
+  overallImpression       String
+  chanceOfGettingTheJob   String
+  mostRelevantPosition    String
+  personalCapability      String
+  psychologicalCapability String
+  technicalCapability     String
+  finalThoughts           String
+  interview               Interview @relation(fields: [interviewId], references: [id])
+  interviewId             Int       @unique
 }
