@@ -25,8 +25,9 @@ jobs:
       - name: Set Up App
         run: |
           echo '${{ secrets.ENV }}' > .env
-          npm i
-          npx prisma generate
+          npm i -g pnpm
+          pnpm install
+          pnpx prisma generate
 
       - name: Deploy to App Engine
         id: deploy
