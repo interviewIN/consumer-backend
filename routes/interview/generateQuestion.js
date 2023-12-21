@@ -20,8 +20,18 @@ module.exports = async (fastify, opts) => {
 					status: true,
 					questions: true,
 					answers: true,
-					summary: true,
 					candidateId: true,
+					summary: {
+						select: {
+							overallImpression: true,
+							chanceOfGettingTheJob: true,
+							mostRelevantPosition: true,
+							personalCapability: true,
+							psychologicalCapability: true,
+							technicalCapability: true,
+							finalThoughts: true,
+						},
+					},
 					candidate: {
 						select: {
 							name: true,
