@@ -122,6 +122,10 @@ module.exports = async (fastify, opts) => {
 				}
 			}
 
+			if(interview.summary === null){
+				interview.summary = {};
+			}
+
 			try {
 				await fastify.prisma.interview.update({
 					where: {

@@ -63,13 +63,13 @@ model Interview {
 
 model Summary {
   id                      Int       @id @default(autoincrement())
-  overallImpression       String
-  chanceOfGettingTheJob   String
-  mostRelevantPosition    String
-  personalCapability      String
-  psychologicalCapability String
-  technicalCapability     String
-  finalThoughts           String
+  overallImpression       String    @default("No Summary")
+  chanceOfGettingTheJob   String    @default("No Summary")
+  mostRelevantPosition    String    @default("No Summary")
+  personalCapability      String    @default("No Summary")
+  psychologicalCapability String    @default("No Summary")
+  technicalCapability     String    @default("No Summary")
+  finalThoughts           String    @default("No Summary")
   interview               Interview @relation(fields: [interviewId], references: [id])
   interviewId             Int       @unique
 }
