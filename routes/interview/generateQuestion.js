@@ -1,6 +1,55 @@
 const axios = require("axios");
+const EventEmitter = require("events");
+const eventEmitter = new EventEmitter();
 
 module.exports = async (fastify, opts) => {
+
+	eventEmitter.on("generateSummary", async (interviewId, requestBody) => {
+
+		const response = await axios.post(
+			process.env.SUMMARY_URL,
+			requestBody
+		).then((res) => res.data).catch((err) => console.log(err));
+
+		try{
+
+			const interview = await fastify.prisma.interview.update({
+				where: {
+					id: interviewId,
+				},
+				data: {
+					summary: {
+						upsert: {
+							update: {
+								overallImpression: response.overall_impression,
+								chanceOfGettingTheJob: response.chance_of_getting_the_job,
+								mostRelevantPosition: response.most_relevant_position,
+								personalCapability: response.personal_capability,
+								psychologicalCapability: response.psychological_capability,
+								technicalCapability: response.technical_capability,
+								finalThoughts: response.final_thoughts,
+							},
+							create: {
+								overallImpression: response.overall_impression,
+								chanceOfGettingTheJob: response.chance_of_getting_the_job,
+								mostRelevantPosition: response.most_relevant_position,
+								personalCapability: response.personal_capability,
+								psychologicalCapability: response.psychological_capability,
+								technicalCapability: response.technical_capability,
+								finalThoughts: response.final_thoughts,
+							},
+						}
+					},
+				},
+			});
+
+		} catch(err){
+			console.log(err);
+		}
+
+	});
+
+
 	fastify.post(
 		"/generateQuestion",
 		{
@@ -60,10 +109,11 @@ module.exports = async (fastify, opts) => {
 					.code(403)
 					.send({ message: "You are not allowed to access this interview" });
 				return;
-			} else if(["PENDING", "ACCEPTED", "REJECTED"].includes(interview.status)){
-				reply.code(403).send({ message: "Interview is already completed" });
-				return;
-			}
+			} 
+			// else if(["PENDING", "ACCEPTED", "REJECTED"].includes(interview.status)){
+			// 	reply.code(403).send({ message: "Interview is already completed" });
+			// 	return;
+			// }
 
 			const interviewQuestion = {
 				status: interview.status,
@@ -111,20 +161,22 @@ module.exports = async (fastify, opts) => {
 						}),
 					}
 
-					const response = await axios.post(
-						process.env.SUMMARY_URL,
-						requestBody
-					).then((res) => res.data).catch((err) => console.log(err));
+					eventEmitter.emit("generateSummary", interviewId, requestBody);
 
-					interview.summary = {
-						overallImpression: response.overall_impression,
-						chanceOfGettingTheJob: response.chance_of_getting_the_job,
-						mostRelevantPosition: response.most_relevant_position,
-						personalCapability: response.personal_capability,
-						psychologicalCapability: response.psychological_capability,
-						technicalCapability: response.technical_capability,
-						finalThoughts: response.final_thoughts,
-					};
+					// const response = await axios.post(
+					// 	process.env.SUMMARY_URL,
+					// 	requestBody
+					// ).then((res) => res.data).catch((err) => console.log(err));
+
+					// interview.summary = {
+					// 	overallImpression: response.overall_impression,
+					// 	chanceOfGettingTheJob: response.chance_of_getting_the_job,
+					// 	mostRelevantPosition: response.most_relevant_position,
+					// 	personalCapability: response.personal_capability,
+					// 	psychologicalCapability: response.psychological_capability,
+					// 	technicalCapability: response.technical_capability,
+					// 	finalThoughts: response.final_thoughts,
+					// };
 
 				} else {
 					interviewQuestion.question =
@@ -144,12 +196,12 @@ module.exports = async (fastify, opts) => {
 					data: {
 						status: interview.status,
 						answers: interview.answers,
-						summary: {
-							upsert: {
-								update: interview.summary,
-								create: interview.summary,
-							}
-						},
+						// summary: {
+						// 	upsert: {
+						// 		update: interview.summary,
+						// 		create: interview.summary,
+						// 	}
+						// },
 					},
 				});
 
