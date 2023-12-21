@@ -31,7 +31,7 @@ module.exports = async (fastify, opts) => {
                     answer: answer,
                 })
 
-                if(index === interview.answers.length - 1){
+                if(index === interview.questions.length - 1){
                     interviewChat.chat.push({
                         question: "Thank you for your time!",
                         answer: "",
