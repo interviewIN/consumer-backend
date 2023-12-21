@@ -146,7 +146,7 @@ module.exports = async (fastify, opts) => {
 				interviewQuestion.status = interview.status;
 			} catch (err) {
 				console.log(err);
-				reply.code(500).send({ message: "Internal server error" });
+				return reply.code(500).send({ message: `Internal server error, err=[${err}]` });
 			}
 
 			return interviewQuestion;
