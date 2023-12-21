@@ -109,11 +109,10 @@ module.exports = async (fastify, opts) => {
 					.code(403)
 					.send({ message: "You are not allowed to access this interview" });
 				return;
-			} 
-			// else if(["PENDING", "ACCEPTED", "REJECTED"].includes(interview.status)){
-			// 	reply.code(403).send({ message: "Interview is already completed" });
-			// 	return;
-			// }
+			} else if(["PENDING", "ACCEPTED", "REJECTED"].includes(interview.status)){
+				reply.code(403).send({ message: "Interview is already completed" });
+				return;
+			}
 
 			const interviewQuestion = {
 				status: interview.status,
@@ -162,21 +161,6 @@ module.exports = async (fastify, opts) => {
 					}
 
 					eventEmitter.emit("generateSummary", interviewId, requestBody);
-
-					// const response = await axios.post(
-					// 	process.env.SUMMARY_URL,
-					// 	requestBody
-					// ).then((res) => res.data).catch((err) => console.log(err));
-
-					// interview.summary = {
-					// 	overallImpression: response.overall_impression,
-					// 	chanceOfGettingTheJob: response.chance_of_getting_the_job,
-					// 	mostRelevantPosition: response.most_relevant_position,
-					// 	personalCapability: response.personal_capability,
-					// 	psychologicalCapability: response.psychological_capability,
-					// 	technicalCapability: response.technical_capability,
-					// 	finalThoughts: response.final_thoughts,
-					// };
 
 				} else {
 					interviewQuestion.question =
